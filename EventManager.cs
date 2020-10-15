@@ -46,6 +46,7 @@ public class EventManager : MonoBehaviour
                 PlayerController.lives=3;
                 PlayerController.pills=0;
                 PlayerController.disabled=false;
+
             }
             
         }

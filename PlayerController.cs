@@ -32,7 +32,10 @@ public class PlayerController : MonoBehaviour
     public static float pills=0f;
     public Vector3 prevTrans;
     public static bool disabled=false;
-    
+    public static float[] startPosX = { -135, 29, 187, 336, 438};
+    public static float[] startPosY = { 8.587f, 16f, 8.587f,24f,12f};
+    public static int startInd=0;
+    public static int deaths = 0;
     
     void Start()
     {
@@ -40,6 +43,7 @@ public class PlayerController : MonoBehaviour
         characterController=GetComponent<CharacterController>(); 
         CrowdHitBox.onPlayerCollisionCrowd+=knockBack;
         disabled=false;
+        transform.position = new Vector3(startPosX[startInd], startPosY[startInd], transform.position.z);
 
     }
 
@@ -158,7 +162,9 @@ public class PlayerController : MonoBehaviour
         }
         else
             s+="0";
-        s+="s";
+        s+="s\n";
+        s += "Deaths x";
+        s += deaths.ToString();
         stats.text=s;
     }
 
@@ -185,7 +191,10 @@ public class PlayerController : MonoBehaviour
             s+=(15f-Shield.currentTime).ToString();
         else
             s+="0";
-        s+="s";
+        s+="s\n";
+        s += "Deaths x";
+        deaths++;
+        s += deaths.ToString();
         stats.text=s;
     }
     
