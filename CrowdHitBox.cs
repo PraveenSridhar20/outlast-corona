@@ -19,13 +19,13 @@ public class CrowdHitBox : MonoBehaviour
     void Update()
     {
         //print(Mathf.Abs(playerTrans.position.y-transform.position.y));
-        if(Mathf.Abs(playerTrans.position.x-transform.position.x)<1.5f&&!(Blinking.blink)&&(Mathf.Abs(playerTrans.position.y-transform.position.y)<1f)&&!(MaskSpin.shieldEnabled)&&(PlayerController.lives>0)){
+        if(Mathf.Abs(playerTrans.position.x-transform.position.x)<1.5f&&!(Blinking.blink)&&(Mathf.Abs(playerTrans.position.y-transform.position.y)<1f)&&!(Shield.shieldEnabled)&&(PlayerController.lives>0)){
             PlayerController.lives--;
             print(PlayerController.lives);
             if (onPlayerCollisionCrowd!=null)
                 onPlayerCollisionCrowd();
         }
-        else if (Mathf.Abs(playerTrans.position.x-transform.position.x)<1.5f&&!(Blinking.blink)&&(Mathf.Abs(playerTrans.position.y-transform.position.y)<1f)&&!(MaskSpin.shieldEnabled)&&(PlayerController.lives<=0)){
+        else if (Mathf.Abs(playerTrans.position.x-transform.position.x)<1.5f&&!(Blinking.blink)&&(Mathf.Abs(playerTrans.position.y-transform.position.y)<1f)&&!(Shield.shieldEnabled)&&(PlayerController.lives<=0)){
             particles.enableEmission=true;
             particles.Play();
             Destroy(GameObject.FindGameObjectWithTag("Player"));

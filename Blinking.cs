@@ -6,15 +6,16 @@ public class Blinking : MonoBehaviour
 {
     // Start is called before the first frame update
     public SkinnedMeshRenderer meshRenderer1,meshRenderer2,meshRenderer3,meshRenderer4,meshRenderer5;
-    bool visible=true;
-    float currentTime=0f;
-    public int blinkFreq=0;
+    static bool visible=true;
+    static float currentTime=0f;
+    public static int blinkFreq=0;
     public static bool blink=false;
-    GameObject gameObject1,gameObject2;
+    static GameObject gameObject1,gameObject2;
     void Start()
     {
-        
-        CrowdHitBox.onPlayerCollisionCrowd+=knockBack;
+        currentTime = 0f;
+        blink = false;
+        CrowdHitBox.onPlayerCollisionCrowd+=startBlink;
         gameObject1=GameObject.FindGameObjectWithTag("Player");
         gameObject2=GameObject.FindGameObjectWithTag("ME");
     }
@@ -22,51 +23,67 @@ public class Blinking : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentTime>0&&currentTime<3){
-            currentTime+=Time.deltaTime;
-            if (blinkFreq<10){
+        if (currentTime > 0 && currentTime < 3)
+        {
+            currentTime += Time.deltaTime;
+            if (blinkFreq < 10)
+            {
                 blinkFreq++;
-                meshRenderer1.enabled=visible;
-                meshRenderer2.enabled=visible;
-                meshRenderer3.enabled=visible;
-                meshRenderer4.enabled=visible;
-                meshRenderer5.enabled=visible;
+                meshRenderer1.enabled = visible;
+                meshRenderer2.enabled = visible;
+                meshRenderer3.enabled = visible;
+                meshRenderer4.enabled = visible;
+                meshRenderer5.enabled = visible;
 
             }
-            else{
-                blinkFreq=0;
+            else
+            {
+                blinkFreq = 0;
                 if (visible)
-                    visible=false;
+                    visible = false;
                 else
-                    visible=true;
-                meshRenderer1.enabled=visible;
-                meshRenderer2.enabled=visible;
-                meshRenderer3.enabled=visible;
-                meshRenderer4.enabled=visible;
-                meshRenderer5.enabled=visible;
+                    visible = true;
+                meshRenderer1.enabled = visible;
+                meshRenderer2.enabled = visible;
+                meshRenderer3.enabled = visible;
+                meshRenderer4.enabled = visible;
+                meshRenderer5.enabled = visible;
             }
         }
-        else if (currentTime>=3f) {
-            currentTime=0;
-            meshRenderer1.enabled=true;
-            meshRenderer2.enabled=true;
-            meshRenderer3.enabled=true;
-            meshRenderer4.enabled=true;
-            meshRenderer5.enabled=true;
-            gameObject1.tag="Player";
-            gameObject2.tag="ME";
-            blink=false;
+        else if (currentTime >= 3f)
+        {
+            currentTime = 0;
+            meshRenderer1.enabled = true;
+            meshRenderer2.enabled = true;
+            meshRenderer3.enabled = true;
+            meshRenderer4.enabled = true;
+            meshRenderer5.enabled = true;
+            gameObject1.tag = "Player";
+            gameObject2.tag = "ME";
+            blink = false;
+        }
+        else if (Shield.shieldEnabled) {
+            currentTime = 0;
+            meshRenderer1.enabled = true;
+            meshRenderer2.enabled = true;
+            meshRenderer3.enabled = true;
+            meshRenderer4.enabled = true;
+            meshRenderer5.enabled = true;
+            gameObject1.tag = "PlayerMask";
+            gameObject2.tag = "MEMask";
+            blink = false;
         }
     }
-    public void knockBack(){
+    public static void startBlink(){
         visible=false;
         gameObject1.tag="PlayerIn";
         gameObject2.tag="MEIn";
         currentTime+=Time.deltaTime;
         blink=true;
     }
+    
     void OnDestroy(){
-        CrowdHitBox.onPlayerCollisionCrowd-=knockBack;
+        CrowdHitBox.onPlayerCollisionCrowd-=startBlink;
      
     }
 }

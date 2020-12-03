@@ -6,28 +6,27 @@ public class FirstPersonCameraController : MonoBehaviour
 {
     // Start is called before the first frame update
     public float sensitivity=10f;
+    public float speed = 3;
+    public Vector2 pitchMinMax = new Vector2(-40, 75);
+    public float rotationSmoothTime = 0.12f;
+    public AudioSource audioSource;
+
     float yaw;
     float pitch;
     Transform cameraT;
-    public Vector2 pitchMinMax=new Vector2(-40,75);
-    public float rotationSmoothTime=0.12f;
     Vector3 rotationSmoothVelocity;
     Vector3 currentRotation;
-    public float speed=3;
     float verticalLookRotation;
     bool crouched=false;
     float ypos=1.717f;
     bool walking=false;
-    public AudioSource audioSource;
+    bool disabled = false;
     bool contd=false;
-    //Rigidbody rigidbody;
 
     Vector3 inputMove;
     CharacterController characterController;
     void Start()
     {
-        //cameraT=Camera.main.transform;
-        //rigidbody=GetComponent<Rigidbody>();
         characterController=GetComponent<CharacterController>();
         audioSource.Stop();
     }
@@ -35,84 +34,96 @@ public class FirstPersonCameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //inputMove=new Vector3(0,0,Input.GetAxisRaw("Vertical"));
+
+        crouchInput();
+        mouseInput();
+        if (!disabled) {
+            keyboardInput();
+        }
+        walkSound();
         
-        if (Input.GetKeyDown(KeyCode.LeftShift)){
-            if (crouched){
-                crouched=false;
-                transform.Translate(Vector3.up*speed*Time.deltaTime);
+        
+    }
+
+    void crouchInput() {
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if (crouched)
+            {
+                crouched = false;
+                transform.Translate(Vector3.up * speed * Time.deltaTime);
             }
-            else if (!crouched&&ypos>1f){
-                crouched=true;
-               transform.Translate(Vector3.up*Time.deltaTime*-speed);
+            else if (!crouched && ypos > 1f)
+            {
+                crouched = true;
+                transform.Translate(Vector3.up * Time.deltaTime * -speed);
             }
         }
         if (crouched)
-            ypos=1f;
+            ypos = 1f;
         else
-            ypos=1.717f;
+            ypos = 1.717f;
 
-        
-        yaw+=Input.GetAxis("Mouse X")*sensitivity;
-        pitch-=Input.GetAxis("Mouse Y")*sensitivity;
-        pitch=Mathf.Clamp(pitch,pitchMinMax.x,pitchMinMax.y);
-        currentRotation=Vector3.SmoothDamp(currentRotation,new Vector3(pitch,yaw,0),ref rotationSmoothVelocity,rotationSmoothTime);
-        transform.eulerAngles=currentRotation;
-        if (!crouched&&transform.position.y<1.717f){
-            transform.Translate(Vector3.up*speed*Time.deltaTime);
-            ypos=1.717f;
+        if (!crouched && transform.position.y < 1.717f)
+        {
+            transform.Translate(Vector3.up * speed * Time.deltaTime);
+            ypos = 1.717f;
+            disabled = true;
         }
-        else if (crouched &&transform.position.y>1f){
-            transform.Translate(-Vector3.up*speed*Time.deltaTime);
-            ypos=1f;
+        else if (crouched && transform.position.y > 1f)
+        {
+            transform.Translate(-Vector3.up * speed * Time.deltaTime);
+            ypos = 1f;
+            disabled = true;
         }
-        else{
-            Vector3 vector3=transform.forward*speed*(Input.GetAxisRaw("Vertical"));
-            Vector3 vector31=transform.right*speed*(Input.GetAxisRaw("Horizontal"));
-            vector3=vector3+vector31;
-            if (vector3.magnitude>0){
-                walking=true;
-            }
-            else    
-                walking=false;
-            characterController.Move(vector3*Time.deltaTime);
-            transform.position=new Vector3(transform.position.x,ypos,transform.position.z);
+
+        if (!crouched && transform.position.y >= 1.717f) {
+            disabled = false;
         }
-        //transform.Translate(inputMove*speed*Time.deltaTime);
-        if (walking&&!contd){
+        else if (crouched && transform.position.y <= 1f)
+        {
+            disabled = false;
+        }
+    }
+
+    void mouseInput() {
+
+        yaw += Input.GetAxis("Mouse X") * sensitivity;
+        pitch -= Input.GetAxis("Mouse Y") * sensitivity;
+        pitch = Mathf.Clamp(pitch, pitchMinMax.x, pitchMinMax.y);
+        currentRotation = Vector3.SmoothDamp(currentRotation, new Vector3(pitch, yaw, 0), ref rotationSmoothVelocity, rotationSmoothTime);
+        transform.eulerAngles = currentRotation;
+    }
+
+    void keyboardInput() {
+
+        Vector3 vector3 = transform.forward * speed * (Input.GetAxisRaw("Vertical")) + transform.right * speed * (Input.GetAxisRaw("Horizontal"));
+        vector3 = new Vector3(vector3.x, 0, vector3.z);
+        if (vector3.magnitude > 0 && characterController.velocity.magnitude>0.1f)
+        {
+            walking = true;
+        }
+        else
+            walking = false;
+        characterController.Move(vector3 * Time.deltaTime);
+        transform.position = new Vector3(transform.position.x, ypos, transform.position.z);
+    }
+
+    void walkSound() {
+        if (walking && !contd)
+        {
             audioSource.Play();
-            contd=true;
+            contd = true;
         }
-        else if (walking&&contd){
-            contd=true;
+        else if (walking && contd)
+        {
+            contd = true;
         }
-        else if (!walking){
-            contd=false;
+        else if (!walking)
+        {
+            contd = false;
             audioSource.Stop();
         }
-
-        
     }
-    /*void OnCollisionEnter(){
-        rigidbody.velocity=Vector3.zero;
-        rigidbody.angularVelocity=Vector3.zero;
-        rigidbody.isKinematic=true;
-        rigidbody.detectCollisions=false;
-        inputMove=Vector3.zero;
-    }
-
-    void OnCollisionStay(){
-        rigidbody.velocity=Vector3.zero;
-        rigidbody.angularVelocity=Vector3.zero;
-        rigidbody.isKinematic=true;
-        rigidbody.detectCollisions=false;
-        inputMove=Vector3.zero;
-    }
-
-    void OnCollisionExit(){
-        rigidbody.velocity=Vector3.zero;
-        rigidbody.angularVelocity=Vector3.zero;
-        rigidbody.isKinematic=false;
-        rigidbody.detectCollisions=true;
-    }*/
 }

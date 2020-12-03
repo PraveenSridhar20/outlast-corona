@@ -16,7 +16,7 @@ public class PlayerHitBox : MonoBehaviour
     {   
         Vector3 pos=new Vector3(playerTransform.transform.position.x,playerTransform.position.y+0.928f,playerTransform.position.z);
         transform.position=pos;
-        //print(gameObject.tag);
+        
     }
      
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckPoint1 : MonoBehaviour
+public class CheckPoint : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -13,14 +13,15 @@ public class CheckPoint1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnTriggerEnter(Collider triggerCollider)
     {
         if (triggerCollider.tag == "ME" || triggerCollider.tag == "Player" || triggerCollider.tag == "PlayerIn" || triggerCollider.tag == "MEIn" || triggerCollider.tag == "PlayerMask" || triggerCollider.tag == "MEMask")
         {
-            PlayerController.startInd = 1;
+            PlayerController.startPosX = transform.position.x;
+            PlayerController.startPosY = transform.position.y;
             print("Collided here");
         }
     }

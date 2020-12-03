@@ -5,7 +5,7 @@ using UnityEngine;
 public class SanitizerCollect : MonoBehaviour
 {
     // Start is called before the first frame update
-     public float angularvel=10f;
+    public float angularvel=10f;
     public ParticleSystem coinColl;
     public AudioSource audioSource;
     public AudioClip audioClip;

@@ -11,7 +11,6 @@ public class VirusPath : MonoBehaviour
     public static event System.Action onPlayerCollision;
     bool shieldOff=false;
     float currentTime=0f;
-    public Blinking blinking;
     GameObject gameObject1,gameObject2;
     public MeshRenderer meshRenderer;
     // Start is called before the first frame update
@@ -37,7 +36,7 @@ public class VirusPath : MonoBehaviour
           currentTime=0;
           shieldOff=false;
           meshRenderer.enabled=false;
-          blinking.knockBack();
+          Blinking.startBlink();
           gameObject1.tag="PlayerIn";
           gameObject2.tag="MEIn";
       }
@@ -96,7 +95,7 @@ public class VirusPath : MonoBehaviour
                 onPlayerCollision();        
         }
         else if (triggerCollider.tag=="PlayerMask"||triggerCollider.tag=="MEMask"){
-            MaskSpin.shieldEnabled=false;
+            Shield.shieldEnabled=false;
             shieldOff=true;
             Shield.currentTime=0f;
             

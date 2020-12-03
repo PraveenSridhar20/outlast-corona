@@ -5,13 +5,12 @@ using UnityEngine;
 public class MaskSpin : MonoBehaviour
 {
     // Start is called before the first frame update
-     public float angularvel=10f;
+    public float angularvel=10f;
     public ParticleSystem coinColl;
     public AudioSource audioSource;
     public AudioClip audioClip;
 
     GameObject gameObject1,gameObject2;
-    public static bool shieldEnabled=false;
     
     // Start is called before the first frame update
     void Start()
@@ -41,7 +40,7 @@ public class MaskSpin : MonoBehaviour
             coinColl.Play();
             gameObject1.tag="PlayerMask";
             gameObject2.tag="MEMask";
-            shieldEnabled=true;            
+            Shield.shieldEnabled=true;            
         }
     }
 }

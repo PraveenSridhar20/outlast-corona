@@ -10,18 +10,11 @@ public class GameBGM : MonoBehaviour
     {
         audioSource=GetComponent<AudioSource>();
         audioSource.Play();
-        //VirusPath.onPlayerCollision+=audioSource.Stop;
-       // CrowdHitBox.onPlayerCollisionCrowdDeath+=audioSource.Stop;
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-    
-    void OnDestroy(){
-        //VirusPath.onPlayerCollision-=audioSource.Stop;
-       // CrowdHitBox.onPlayerCollisionCrowdDeath-=audioSource.Stop;
     }
 }
